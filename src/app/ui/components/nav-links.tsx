@@ -3,7 +3,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   DocumentDuplicateIcon,
-  EnvelopeIcon
+  EnvelopeIcon,
 } from '@heroicons/react/24/outline';
 
 // Map of links to display in the side navigation.
@@ -23,7 +23,7 @@ const links = [
   { name: 'Contact', href: '/blog/contact', icon: EnvelopeIcon },
 ];
 
-export default async function NavLinks() {
+export default function NavLinks() {
   const pathname = usePathname();
   return (
     <>
@@ -40,12 +40,11 @@ export default async function NavLinks() {
               }
             )}
           >
-            <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
+            <LinkIcon className='w-6' />
+            <p className='hidden md:block'>{link.name}</p>
           </Link>
         );
       })}
-
     </>
   );
 }
