@@ -38,11 +38,3 @@ export async function getPostById(id: string) {
   }
 }
 
-export async function deletePost(id: string) {
-  'use server';
-  try {
-    await sql`DELETE FROM posts WHERE id = ${id}`;
-  } catch (error) {
-    console.error('Error deleting post', error);
-  }
-}

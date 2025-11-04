@@ -20,6 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           date: string;
           author: string;
         })}
+        showPreview={false}
       />
     </>
   );

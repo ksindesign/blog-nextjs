@@ -1,6 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 import { auth } from '../../../../auth';
+import { sanitizeHTML } from '@/app/lib/sanitize';
 
 export async function GET() {
   try {
@@ -29,9 +30,13 @@ export async function POST(request: Request) {
       );
     }
 
+    // Sanitize content before saving to database
+    const sanitizedContent = content ? sanitizeHTML(content) : '';
+    const sanitizedTitle = title ? sanitizeHTML(title) : '';
+
     // SQL query to insert a new post
     const posts =
-      await sql`INSERT INTO posts(id,author,title,content,date) VALUES (${id},${author}, ${title}, ${content}, ${date})`;
+      await sql`INSERT INTO posts(id,author,title,content,date) VALUES (${id},${author}, ${sanitizedTitle}, ${sanitizedContent}, ${date})`;
     return NextResponse.json(
       { message: 'Posted successfully' },
       { status: 200 }

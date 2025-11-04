@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
 import { getSession } from 'next-auth/react';
+import ReactEditor from '@/app/ui/components/posts/ReactEditor';
 
 export default function Page() {
   const router = useRouter();
   const [user, setUser] = useState<import('next-auth').User | null>(null);
+  const [content, setContent] = useState('');
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -22,6 +24,42 @@ export default function Page() {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleEditorChange = (value: string) => {
+    setContent(value);
+    setFormData((prevData) => ({
+      ...prevData,
+      content: value,
+    }));
+  };
+
+  const generateContent = () => {
+    if (!formData.title) {
+      alert('Please enter a title first');
+      return;
+    }
+
+    fetch('/api/generate-content', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title: formData.title }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const generatedContent = data.content;
+        setContent(generatedContent);
+        setFormData((prevData) => ({
+          ...prevData,
+          content: generatedContent,
+        }));
+      })
+      .catch((error) => {
+        console.error('Error generating content:', error);
+        alert('Failed to generate content');
+      });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,14 +119,14 @@ export default function Page() {
           <label htmlFor='content' className='block font-medium'>
             Content:
           </label>
-          <textarea
-            id='content'
-            name='content'
-            rows={4}
-            value={formData.content}
-            onChange={handleChange}
-            className='w-full border-2 border-purple-100 p-2 rounded-md focus:border-purple-200 focus:outline-none'
-          ></textarea>
+          <ReactEditor value={content} onChange={handleEditorChange} />
+          <button
+            type='button'
+            onClick={generateContent}
+            className='mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600'
+          >
+            Generate with AI
+          </button>
         </div>
         <div>
           <label htmlFor='date' className='block font-medium'>
