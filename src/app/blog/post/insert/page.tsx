@@ -52,6 +52,10 @@ export default function Page() {
   useEffect(() => {
     getSession().then((session) => {
       setUser(session?.user || null);
+      if (!session?.user) {
+        // if user has not logged in, redirect to the posts page
+        router.push('/blog/posts');
+      }
     });
   }, []);
 

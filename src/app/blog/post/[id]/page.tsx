@@ -1,9 +1,9 @@
-import { posts } from '@/app/lib/placeholder-data';
 import Post from '@/app/ui/components/posts/Post';
 import { notFound } from 'next/navigation';
+import { getPostById } from '@/app/lib/data';
 
-export default function Page({ params }: { params: { id: string } }) {
-  const post = posts.find((post) => post.id === params.id);
+export default async function Page({ params }: { params: { id: string } }) {
+  const post = await getPostById(params.id);
 
   if (!post) {
     notFound();

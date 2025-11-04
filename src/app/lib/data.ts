@@ -1,6 +1,5 @@
 import { createClient, sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
-import { resolve } from 'path';
 
 export async function connectToDB() {
   const client = createClient();
@@ -22,9 +21,28 @@ export async function getPosts() {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const data = await sql`SELECT * FROM posts`; // get all posts from the table of posts
-    // console.log(data.rows);
     return data.rows;
   } catch (error) {
     console.error('Error getting posts', error);
+  }
+}
+
+export async function getPostById(id: string) {
+  try {
+    noStore();
+    const data = await sql`SELECT * FROM posts WHERE id = ${id} LIMIT 1`;
+    return data.rows[0] || null;
+  } catch (error) {
+    console.error('Error getting post by id', error);
+    return null;
+  }
+}
+
+export async function deletePost(id: string) {
+  'use server';
+  try {
+    await sql`DELETE FROM posts WHERE id = ${id}`;
+  } catch (error) {
+    console.error('Error deleting post', error);
   }
 }

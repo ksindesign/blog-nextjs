@@ -18,9 +18,12 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
+  background: linear-gradient(
+      to bottom,
       transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
   font-style: italic;
 }
 
@@ -28,4 +31,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+.hero-banner {
+  display: block;
+  background-image: url(https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070);
+  width: 100vw;
+  height: 100%;
+  max-height: 50vh;
+  background-position: center center;
 }
