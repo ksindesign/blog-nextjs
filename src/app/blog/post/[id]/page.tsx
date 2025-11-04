@@ -12,7 +12,15 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <h1>Post</h1>
-      <Post {...post} />
+      <Post
+        {...(post as {
+          id: string;
+          title: string;
+          content: string;
+          date: string;
+          author: string;
+        })}
+      />
     </>
   );
 }

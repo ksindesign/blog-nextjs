@@ -2,12 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '@/app/lib/definition';
 import { getSession } from 'next-auth/react';
 
 export default function Page() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<import('next-auth').User | null>(null);
   const [formData, setFormData] = useState({
     id: '',
     title: '',
@@ -15,7 +14,9 @@ export default function Page() {
     date: new Date().toISOString().slice(0, 10),
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -23,7 +24,7 @@ export default function Page() {
     }));
   };
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const uuid = uuidv4();
     fetch(
@@ -51,7 +52,7 @@ export default function Page() {
 
   useEffect(() => {
     getSession().then((session) => {
-      setUser(session?.user || null);
+      setUser(session?.user ?? null);
       if (!session?.user) {
         // if user has not logged in, redirect to the posts page
         router.push('/blog/posts');
@@ -83,7 +84,7 @@ export default function Page() {
           <textarea
             id='content'
             name='content'
-            rows='4'
+            rows={4}
             value={formData.content}
             onChange={handleChange}
             className='w-full border-2 border-purple-100 p-2 rounded-md focus:border-purple-200 focus:outline-none'
